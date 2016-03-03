@@ -6,6 +6,8 @@ import argparse
 import os
 import random
 import json
+import codecs
+import re
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
@@ -20,9 +22,11 @@ parser.add_argument("-f", "--format", type=str, default='docs', choices=['docs',
                          "{doc:[F_NAME], content:[F_CONTENT]} pairs")
 
 args = parser.parse_args()
+
 train = [(c, set(random.sample(os.listdir(os.path.join(args.SRC, c)),
                                int(len(os.listdir(os.path.join(args.SRC, c))) * (0.01 * args.ratio)))))
-         for c in os.listdir(args.SRC)]
+         for c in os.listdir(args.SRC) if not re.match(r'^\.', c)]
+
 test = [(c, set(os.listdir(os.path.join(args.SRC, c))) - tr) for (c, tr) in train]
 
 os.mkdir(args.DEST)
@@ -48,13 +52,13 @@ for (tr, ts) in zip(train, test):
         cat = tr[0]
         train_docs, test_docs = [], []
         for f in tr[1]:
-            with open(os.path.join(args.SRC, cat, f)) as content:
+            with codecs.open(os.path.join(args.SRC, cat, f), encoding='windows-1254') as content:
                 train_docs.append({"doc": f, "content": content.read()})
-        with open(os.path.join(args.DEST, 'training', cat + ".txt"), "w") as f_out:
-            json.dump(train_docs, f_out, indent=0, ensure_ascii=False)
+        with codecs.open(os.path.join(args.DEST, 'training', cat + ".txt"), "w", encoding='windows-1254') as f_out:
+            json.dump(train_docs, f_out, indent=0)
 
         for f in ts[1]:
-            with open(os.path.join(args.SRC, cat, f)) as content:
+            with codecs.open(os.path.join(args.SRC, cat, f), encoding='windows-1254') as content:
                 test_docs.append({"doc": f, "content": content.read()})
-        with open(os.path.join(args.DEST, 'test', cat + ".txt"), "w") as f_out:
-            json.dump(test_docs, f_out, indent=0, ensure_ascii=False)
+        with codecs.open(os.path.join(args.DEST, 'test', cat + ".txt"), "w", encoding='windows-1254') as f_out:
+            json.dump(test_docs, f_out, indent=0)
