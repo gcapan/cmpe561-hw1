@@ -69,15 +69,3 @@ if __name__ == "__main__":
         print modality, doc[k][modality]
 
 
-    test_dir = '/Users/gokhan/Desktop/split/test'
-    test = dict([(c, os.listdir(os.path.join(test_dir, c)))
-         for c in os.listdir(test_dir) if not re.match(r'^\.', c)])
-
-    for c in test:
-        test[c] = [os.path.join(test_dir, c, d) for d in test[c] if not re.match(r'^\.', d)]
-
-    for c in test:
-        for doc in test[c]:
-            print doc
-            print complexity_features(codecs.open(doc,encoding='windows-1254').read(), word_filter=f)
-
