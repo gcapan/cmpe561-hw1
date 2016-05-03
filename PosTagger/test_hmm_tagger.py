@@ -35,9 +35,3 @@ if __name__ == "__main__":
     print
     print "Overall accuracy:",accuracy_all
     print "Confusion matrix:",confusion_all
-
-    report(confusion_all, tag_dictionary_t)
-
-    print
-
-    report(confusion_known, tag_dictionary_t)
