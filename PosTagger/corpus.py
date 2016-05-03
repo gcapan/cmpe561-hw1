@@ -34,6 +34,11 @@ class Corpus:
 
 
     def persist(self, path):
+        try:
+            os.makedirs(path)
+        except OSError:
+            pass
+
         with codecs.open(os.path.join(path, "dictionary"), "w", encoding="utf-8") as dict_out:
             dict_out.write(json.dumps(self.dictionary))
 
