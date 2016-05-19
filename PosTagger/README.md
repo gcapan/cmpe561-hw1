@@ -62,6 +62,27 @@ The script will report the confusion matrix and the classifier accuracy for:
 1. all words in the test set
 2. only words in the test set those were also observed in the training set
 
+It might be non-obvious why we need serialized model, since we already have tagged output. 
+It is because we need the dictionary to identify whether a word is unknown to the model.
+
+
+### An Example Run
+1. Train. -- The third argument is the target for the model to be serialized
+```
+python train_hmm_tagger.py /path/to/train/file.conll postag /path/to/model/dir
+```
+2. POS-tag -- with previously trained model:
+- The tagged output will be written to a file, and enclosing directory should exist
+- The test file to tag can as well be a validation file, the script will ignore the correct assignments in that case
+```
+python train_hmm_tagger.py /path/to/test/testfile.conll /path/for/tagged/output.txt /path/to/trained/model/dir
+```
+3. Evaluate -- compare the tagged output with the gold standard file This will write a confusion matrix
+```
+python test_hmm_tagger.py /path/for/tagged/output.txt /path/for/gold/standard/file.conll /path/to/trained/model/dir postag
+```
+
+
 [1]:Kemal Oflazer, Bilge Say, Dilek Zeynep Hakkani-Tür, Gökhan Tür,
 "Building a Turkish Treebank", Invited chapter in "Building and
 Exploiting Syntactically-annotated Corpora", Anne Abeille Editor,
